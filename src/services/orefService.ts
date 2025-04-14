@@ -29,9 +29,10 @@ export const fetchData = async (period: Period, customDates?: CustomDates) => {
   }
 
   
-  const url = `https://www.oref.org.il//Shared/Ajax/GetAlarmsHistory.aspx`;
+  const url = `https://alerts-history.oref.org.il//Shared/Ajax/GetAlarmsHistory.aspx`;
   // &fromDate=07.03.2024&toDate=28.03.2024&mode=0
   try {
+    console.log(`Fetching data from ${url} with start date: ${customDates?.startDate} and end date: ${customDates?.endDate}, period: ${periodFormat} and language: ${languageFormat}`);
     const response = await axios.get(url, {
       params: {
         ...(customDates && {

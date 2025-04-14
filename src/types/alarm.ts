@@ -1,3 +1,5 @@
+import { Period } from "../enums/period";
+
 export interface Alarm {
   data: string;
   date: string;
@@ -8,3 +10,7 @@ export interface Alarm {
   matrix_id: number;
   rid: number;
 }
+
+export type GetAlarmsInput =
+  | { period: Period.Custom; startDate: Date; endDate: Date }
+  | { period: Exclude<Period, Period.Custom> };

@@ -1,28 +1,21 @@
-import {
-  getCustomAlarms,
-  getDailyAlarms,
-  getMonthlyAlarms,
-  getWeeklyAlarms,
-} from "../controllers/alarms";
-import { Period } from "../enums/period";
 import { fetchData } from "../services/orefService";
-import { Alarm } from "../types/alarm";
+import { Alarm, GetAlarmsInput } from "../types/alarm";
+import { Period } from "../enums/period";
 
-// Assuming your Oref API functions follow a similar pattern
-export async function getAlarmsByPeriod(
-  period: Period,
-  comparePeriodNumber: number
-): Promise<{ alarms: Alarm[] | undefined }> {
-  switch (period) {
-    case Period.Daily:
-      return getDailyAlarms();
-    case Period.Weekly:
-      return getWeeklyAlarms();
-    case Period.Monthly:
-      return getMonthlyAlarms();
-    case Period.Custom:
-      return getCustomAlarms(comparePeriodNumber);
-    default:
-      throw new Error("Invalid period");
+
+  export async function getAlarmsByPeriod(input: GetAlarmsInput): Promise<{ alarms: Alarm[] | undefined }> {
+    try {
+      if (input.period === Period.Custom) {
+        const { startDate, endDate } = input; // now safe!
+        const alarms = await fetchData(Period.Custom, { startDate, endDate });
+        return { alarms };
+      }
+  
+      // Here TypeScript knows it's not Period.Custom
+      const alarms = await fetchData(input.period);
+      return { alarms };
+    } catch (err) {
+      throw new Error("Failed to get Alarms");
+    }
   }
-}
+  
